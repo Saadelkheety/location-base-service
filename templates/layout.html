@@ -2,6 +2,7 @@
 <html>
   <head>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet'>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
     <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
   </head>
   <body>
@@ -10,9 +11,9 @@
         <h1 class="title">Learning Flask</h1>
       </div>
     </header>
-    
+
     {% block content %}
     {% endblock %}
-    
+
   </body>
 </html>
