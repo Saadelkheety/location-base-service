@@ -7,8 +7,8 @@ app = Flask(__name__)
 db.init_app(app)
 app.app_context().push()
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:564312@localhost/learningflask'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:564312@localhost/learningflask'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 
 
 app.secret_key = 'development-key' # to protect against a security exploit called cross sight request forgery, or CSRF.
