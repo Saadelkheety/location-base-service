@@ -1,5 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug import generate_password_hash, check_password_hash
+from urllib.parse import urljoin
+from flask import redirect, url_for
+
+import geocoder
+import urllib.request
+import json
 
 db = SQLAlchemy()
 
@@ -22,3 +28,49 @@ class User(db.Model):
 
   def check_password(self, password):
     return check_password_hash(self.pwdhash, password)
+
+
+class Place(object):
+  def meters_to_walking_time(self, meters):
+    # 80 meters is one minute walking time
+    return int(meters / 80)
+
+  def wiki_path(self, slug):
+    return urljoin("http://en.wikipedia.org/wiki/", slug.replace(' ', '_'))
+
+  def address_to_latlng(self, address):
+    g = geocoder.geonames(address, key='Elkheety')
+    print("this is latlng:", g.latlng, g.json)
+    return (g.latlng)
+
+  def query(self, address):
+    if self.address_to_latlng(address) == None:
+        return ["please enter valid name"]
+    lat, lng = self.address_to_latlng(address)
+    print("this is a lat and lng: ", lat, lng)
+    query_url = 'https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gsradius=5000&gscoord={0}%7C{1}&gslimit=20&format=json'.format(lat, lng)
+    g = urllib.request.urlopen(query_url)
+    results = g.read()
+    g.close()
+
+    data = json.loads(results)
+    places = []
+    for place in data['query']['geosearch']:
+      name = place['title']
+      meters = place['dist']
+      lat = place['lat']
+      lng = place['lon']
+
+      wiki_url = self.wiki_path(name)
+      walking_time = self.meters_to_walking_time(meters)
+      d = {
+        'name': name,
+        'url': wiki_url,
+        'time': walking_time,
+        'lat': lat,
+        'lng': lng
+      }
+
+      places.append(d)
+
+    return places
