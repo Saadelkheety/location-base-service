@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 
+{% block header %}
+<a href="{{ url_for('logout') }}" class="btn-primary">log out</a>
+{% endblock %}
 {% block content %}
   <main class="hero-section">
     <div class="container">

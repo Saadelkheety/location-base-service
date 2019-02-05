@@ -14,7 +14,8 @@
       </div>
       <div class="hero-section pull-right">
           <a href="https://elkheety.herokuapp.com/" class="btn-secondary">Saad Elkheety</a>
-          <a href="{{ url_for('logout') }}" class="btn-primary">log out</a>
+          {% block header %}
+          {% endblock %}
       </div>
     </header>
 
